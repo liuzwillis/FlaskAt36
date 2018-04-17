@@ -1,3 +1,5 @@
-第二次学习flask web
-使用python3
+the 2ed time learning of flask web
+浣跨敤python3
 
+# 娴嬭瘯涓枃
+# 绗竴娆′笂浼犲嚭鐜颁腑鏂囦贡鐮侊紝瑙ｅ喅锛氬埄鐢∟otepad++/缂栫爜/UTF-8鏍煎紡缂栫爜
