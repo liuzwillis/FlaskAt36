@@ -4,10 +4,17 @@
 from flask import Flask
 from flask import request
 from flask import make_response
+from flask import render_template
+from datetime import datetime
+
 from flask_script import Manager, Server, Shell
+from flask_bootstrap import Bootstrap
+from flask_moment import Moment
 
 app = Flask(__name__)
 manager = Manager(app)
+bootstrap = Bootstrap(app)
+moment = Moment(app)
 
 
 # 添加命令行命令
@@ -21,26 +28,12 @@ manager.add_command('runserver', Server(host='0.0.0.0'))
 
 @app.route('/')
 def index():
-    return '<p>hello world!</p>'
+    return render_template('index.html', current_time=datetime.utcnow())
 
 
 @app.route('/user/<name>')
 def user(name):
-    return '<p>hello {}!</p>'.format(name)
-
-
-@app.route('/browser')
-def browser():
-    # 使用request上下文全局变量
-    user_agent = request.headers.get('User-Agent')
-    return '<p>Your browser is {}</p>'.format(user_agent)
-
-
-@app.route('/cookie')
-def cookie():
-    response = make_response('<p>This document carries a cookie.</p>')
-    response.set_cookie('answer', 42)
-    return response
+    return render_template('user.html', name=name)
 
 
 @app.errorhandler(404)

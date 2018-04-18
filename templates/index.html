@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>Hello, world!</h1>
+    </div>
+    <div>
+        {# 除了fromNow，这里的refresh并没有什么用，并不能实现动态时钟 #}
+        <p>当前时间为： {{ moment(current_time).format('YYYY年M月D日, HH:mm:ss') }}。</p>
+        <p>当前时间为： {{ moment().format('YYYY年M月D日, HH:mm:ss', refresh=True) }}。</p>
+        <p>当前时间为： {{ moment().calendar(refresh=True) }}。</p>
+        <p> {{ moment().fromNow(False, refresh=True) }}</p>
+    </div>
+</div>
+{% endblock %}
