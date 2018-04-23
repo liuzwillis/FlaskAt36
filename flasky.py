@@ -2,16 +2,19 @@
 # -*-coding:utf-8 -*-
 
 import os
+from threading import Thread
 
 from flask import Flask
 from flask import render_template
 from flask import session, redirect, url_for
+from flask import current_app
 from flask import flash
 
 from flask_script import Manager, Server, Shell
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_migrate import Migrate, MigrateCommand
+from flask_mail import Mail, Message
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SubmitField
@@ -23,7 +26,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 # 设置密钥
-app.config['SECRET_KEY'] = 'hard to guess string123'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 # 设置调试模式
 app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
@@ -32,12 +35,48 @@ app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 # 如果设置成 True，SQLAlchemy 将会追踪对象的修改并且发送信号。这需要额外的内存，不必要可以禁用它。
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# email 配置
+app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER') or 'smtp.163.com'
+app.config['MAIL_PORT'] = '25'
+app.config['MAIL_USE_TLS'] = 'True'
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['FLASKY_MAIL_SUBJECT_PREFIX'] = '[Flasky]'
+# 发件人的格式，可以写成tuple，flask_mail会识别
+app.config['FLASKY_MAIL_SENDER'] = ('Flasky Admin', app.config['MAIL_USERNAME'])
+app.config['FLASKY_ADMIN'] = os.environ.get('FLASKY_ADMIN')
 
 manager = Manager(app)
 bootstrap = Bootstrap(app)
 moment = Moment(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+mail = Mail(app)
+
+
+# 发送邮件
+def send_async_email(app, msg):
+    with app.app_context():
+        mail.send(msg)
+
+
+def send_email(to, subject, template, **kwargs):
+    """
+    发送异步邮件
+    :param to: 收件人
+    :param subject: 主题
+    :param template: 模板文件
+    :param kwargs: 模板的参数
+    :return:
+    """
+    app = current_app._get_current_object()
+    msg = Message(app.config['FLASKY_MAIL_SUBJECT_PREFIX'] + subject,
+                  sender=app.config['FLASKY_MAIL_SENDER'], recipients=[to])
+    msg.body = render_template(template + '.txt', **kwargs)
+    msg.html = render_template(template + '.html', **kwargs)
+    thr = Thread(target=send_async_email, args=[app, msg])
+    thr.start()
+    return thr
 
 
 class Role(db.Model):
@@ -77,18 +116,6 @@ class NameForm(FlaskForm):
     submit = SubmitField('提交')
 
 
-# class CommentForm(FlaskForm):
-#     name = StringField('', validators=[Length(0, 64)], render_kw={"placeholder": "Your name",
-#         "style": "background: url(/static/login-locked-icon.png) no-repeat 15px center;text-indent: 28px"})
-#     email = StringField('', description='* We\'ll never share your email with anyone else.', validators= \
-#         [DataRequired(), Length(4, 64), Email(message=u"邮件格式有误")], render_kw=
-#         {"placeholder": "E-mail: yourname@example.com"})
-#     comment = TextAreaField('', description=u"请提出宝贵意见和建议", validators=[DataRequired()],
-#                             render_kw={"placeholder": "Input your comments here"})
-#     test = StringField()
-#     submit = SubmitField(u'提交')
-
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -103,6 +130,10 @@ def user():
             user_ = User(username=form.name.data)
             db.session.add(user_)
             session['known'] = False
+            # 如果有管理员，新用户注册时，给管理员发一个邮件，参数依次为，收件人、主题、模板、模板参数。
+            # 163发送邮件其实很快，后面章节验证邮件会有坑，主要是因为163会判别带验证地址的邮件为垃圾邮件，而锁定ip或邮箱
+            if app.config['FLASKY_ADMIN']:
+                send_email(app.config['FLASKY_ADMIN'], 'New User', 'mail/new_user', user=user_)
         else:
             session['known'] = True
         session['name'] = form.name.data
@@ -123,4 +154,3 @@ def internal_server_error(e):
 
 if __name__ == '__main__':
     manager.run()
-    # 现在通过命令 python flask.py runserver 运行服务
