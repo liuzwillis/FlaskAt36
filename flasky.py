@@ -37,8 +37,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # email 配置
 app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER') or 'smtp.163.com'
-app.config['MAIL_PORT'] = '25'
-app.config['MAIL_USE_TLS'] = 'True'
+app.config['MAIL_PORT'] = 25
+app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
 app.config['FLASKY_MAIL_SUBJECT_PREFIX'] = '[Flasky]'

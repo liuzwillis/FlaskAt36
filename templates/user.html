@@ -1,34 +1,10 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block content %}
-<div class="container">
-
-    {% for message in get_flashed_messages() %}
-    <div class="alert alert-warning">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        {{ message }}
-    </div>
-    {% endfor %}
-
+{% block page_content %}
 
     <div class="page-header">
-        <h1>Hello, {% if name %}{{ name }}{% else %}world{% endif %}!</h1>
-        {% if not known %}
-        <p>Pleased to meet you!</p>
-        {% else %}
-        <p>Happy to see you again!</p>
-        {% endif %}
+        <h1>你好, {% if name %}{{ name }}{% else %}陌生人{% endif %}。</h1>
     </div>
 
-    <div>
-        {# 渲染表单 #}
-        {{ wtf.quick_form(form) }}
-    </div>
-
-    <div>
-        <p>当前时间为： {{ moment().format('YYYY年M月D日, HH:mm:ss') }}。</p>
-        <p> {{ moment().fromNow(False, refresh=True) }}</p>
-    </div>
-</div>
 {% endblock %}

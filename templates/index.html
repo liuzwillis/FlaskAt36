@@ -1,14 +1,20 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block content %}
-<div class="container">
+{% block page_content %}
+
     <div class="page-header">
-        <h1>Hello!</h1>
+        <h1>你好, {% if name %}{{ name }}{% else %}陌生人{% endif %}。</h1>
+        {% if not known %}
+        <p>人生若只如初见</p>
+        {% else %}
+        <p>欢迎回来</p>
+        {% endif %}
     </div>
+
     <div>
-        <p>当前时间为： {{ moment().format('YYYY年M月D日, HH:mm:ss') }}。</p>
-        <p> {{ moment().fromNow(False, refresh=True) }}</p>
+        {# 渲染表单 #}
+        {{ wtf.quick_form(form) }}
     </div>
-</div>
+
 {% endblock %}
