@@ -40,7 +40,7 @@ nosetests.xml
 
 # Virtual environment
 venv
-venv_Of_FlaskAt36
+venv_Flask3_win10
 
 # Environment files
 .env
