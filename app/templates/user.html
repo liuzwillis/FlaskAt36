@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title_sub %}用户资料{% endblock %}
+
+{% block page_content %}
+    <div class="page-header">
+        <h1>{{ user.username }}</h1>
+
+        {% if user.name or user.location %}
+            <p>
+                {% if user.name %}{{ user.name }}{% endif %}
+                {% if user.location %}
+                    来自 <a href="http://maps.google.com/?q={{ user.location }}">{{ user.location }}</a>
+                {% endif %}
+            </p>
+        {% endif %}
+        {% if current_user.is_administrator() %}
+            <p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+        {% endif %}
+        {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+        <p>
+            加入时间： {{ moment(user.member_since).format('L') }}.
+            上次登录： {{ moment(user.last_seen).fromNow() }}.
+        </p>
+
+        <P>
+            {% if user == current_user %}
+                <a class="btn btn-default" href="{{ url_for('main.edit_profile') }}">编辑资料</a>
+            {% endif %}
+            {% if current_user.is_administrator() %}
+                <a class="btn btn-danger" href="{{ url_for('main.edit_profile_admin', user_id=user.id) }}">编辑资料 [Admin]</a>
+            {% endif %}
+        </P>
+
+    </div>
+{% endblock %}

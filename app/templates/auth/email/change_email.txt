@@ -16,6 +16,6 @@ Note: replies to this email address are not monitored.
 
 {{ url_for('auth.change_email', token=token, _external=True) }}
 
-长颈瓶团队
+{{ config.WEB_NAME }}团队
 
 小提示：您不必回复这封邮件

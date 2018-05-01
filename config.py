@@ -31,6 +31,8 @@ class Config:
     # 发件人的格式，可以写成tuple，flask_mail会识别
     FLASKY_MAIL_SENDER = ('Flasky Admin', os.environ.get('MAIL_USERNAME'))
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
+    
+    WEB_NAME = '长颈瓶'
 
     @staticmethod
     def init_app(app):

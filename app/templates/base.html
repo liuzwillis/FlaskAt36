@@ -1,6 +1,8 @@
 {% extends "bootstrap/base.html" %}
 
-{% block title %}长颈瓶{% endblock %}
+{% block title %}
+    {{ config.WEB_NAME }} - {% block title_sub %}{% endblock %}
+{% endblock %}
 
 {% block head %}
 {{ super() }}
@@ -45,20 +47,30 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">    {# 靠右对齐 #}
-                <li><a href="#">消息</a></li>
+                <li>
+                    {% if current_user.is_authenticated %}
+                        <a href="#">消息</a>
+                    {% else %}
+                        <a href="{{ url_for('auth.register') }}">注册</a>
+                    {% endif %}
+                </li>
                 <li class="dropdown">
                     {% if current_user.is_authenticated %}
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <b>账户</b><b class="caret"></b>
+                            <b>{{ current_user.username }}</b><b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
+                            <li>
+                                <a href="{{ url_for('main.user', username=current_user.username) }}">用户资料</a>
+                            </li>
+                            <li class="divider">分离线</li>
                             <li><a href="{{ url_for('auth.change_password') }}">修改密码</a></li>
                             <li><a href="{{ url_for('auth.change_email_request') }}">修改邮箱</a></li>
                             <li class="divider">分离线</li>
                             <li><a href="{{ url_for('auth.logout') }}">退出</a></li>
                         </ul>
                     {% else %}
-                        <li><a href="{{ url_for('auth.login') }}">登录</a></li>
+                        <a href="{{ url_for('auth.login') }}">登录</a>
                     {% endif %}
                 </li>
             </ul>
@@ -96,5 +108,4 @@
 {{ super() }}
 {{ moment.include_moment() }}   {# 引入moment.js库 #}
 {{ moment.locale("zh-CN") }}      {# moment使用中文简体，默认为英文,旧版为moment.lang("") #}
-
 {% endblock %}

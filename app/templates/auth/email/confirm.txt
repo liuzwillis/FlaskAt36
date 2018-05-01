@@ -1,11 +1,11 @@
 亲爱的 {{ user.username }},
 
-欢迎来到长颈瓶！
+欢迎来到{{ config.WEB_NAME }}！
 
 为了验证您的邮箱是您本人所有，请点击以下链接：
 
 {{ url_for('auth.confirm', token=token, _external=True) }}
 
-                                                长颈瓶团队
+{{ config.WEB_NAME }}团队
 
 提示：不需回复此邮件。

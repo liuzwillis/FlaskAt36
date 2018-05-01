@@ -20,12 +20,13 @@ from ..email import send_email
 
 @auth.before_app_request
 def before_request():
-    if current_user.is_authenticated\
-            and not current_user.confirmed\
-            and request.endpoint\
-            and request.endpoint[:5] != 'auth.'\
-            and request.endpoint != 'static':
-        return redirect(url_for('auth.unconfirmed'))
+    if current_user.is_authenticated:
+        current_user.ping()
+        if not current_user.confirmed\
+                and request.endpoint\
+                and request.endpoint[:5] != 'auth.'\
+                and request.endpoint != 'static':
+            return redirect(url_for('auth.unconfirmed'))
 
 
 @auth.route('/unconfirmed')
@@ -71,6 +72,7 @@ def register():
         token = user.generate_token(token_name='confirm')
         send_email(user.email, '确认您的账户邮箱', 'auth/email/confirm', user=user, token=token)
         flash('我们已向您的邮箱发送了一封验证邮件，请及时验证。')
+        flash('注册成功，您可以登录了。')
         return redirect(url_for('main.index'))
     return render_template('auth/register.html', form=form)
 
@@ -81,6 +83,7 @@ def register():
 def confirm(token):
     if current_user.confirmed:
         flash('您已经验证过了')
+        return redirect(url_for('main.index'))
     if current_user.confirm(token):
         db.session.commit()
         flash('邮箱验证成功。')
@@ -133,6 +136,7 @@ def change_password():
 def forgot_password_request():
     # 用户非登录状态才可以找回密码
     if not current_user.is_anonymous:
+        flash('找回密码需要在未登录状态下进行')
         return redirect(url_for('main.index'))
     form = ForgotPasswordForm()
     if form.validate_on_submit():
@@ -157,6 +161,7 @@ def forgot_password_request():
 @auth.route('/forgot-password-reset/<token>', methods=['GET', 'POST'])
 def forgot_password_reset(token):
     if not current_user.is_anonymous:
+        flash('找回密码需要在未登录状态下进行')
         return redirect(url_for('main.index'))
     form = ResetPasswordForm()
     if form.validate_on_submit():

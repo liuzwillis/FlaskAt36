@@ -2,5 +2,5 @@
 <p>为了确认您的新邮箱是本人拥有，请 <a href="{{ url_for('auth.change_email', token=token, _external=True) }}">点击这里</a>.</p>
 <p>您也可以将以下链接复制到浏览器里访问验证</p>
 <p>{{ url_for('auth.change_email', token=token, _external=True) }}</p>
-<p>长颈瓶团队</p>
+<p>{{ config.WEB_NAME }}团队</p>
 <p><small>小提示：您不必回复这封邮件</small></p>
