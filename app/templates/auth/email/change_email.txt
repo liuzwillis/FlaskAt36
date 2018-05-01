@@ -9,3 +9,13 @@ Sincerely,
 The Flasky Team
 
 Note: replies to this email address are not monitored.
+
+亲爱的 {{ user.username }},
+
+为了确认您的新邮箱是本人拥有，请点击以下链接:
+
+{{ url_for('auth.change_email', token=token, _external=True) }}
+
+长颈瓶团队
+
+小提示：您不必回复这封邮件

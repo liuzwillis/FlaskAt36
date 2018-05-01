@@ -1,6 +1,6 @@
 <p>亲爱的 {{ user.username }},</p>
 <p>欢迎来到 <b>长颈瓶</b>!</p>
-<p>为了验证您的邮箱，请 <a href="{{ url_for('auth.confirm', token=token, _external=True) }}">点击这里</a>.</p>
+<p>为了验证您的邮箱是您本人所有，请 <a href="{{ url_for('auth.confirm', token=token, _external=True) }}">点击这里</a>.</p>
 <p>您也可以复制以下链接，在浏览器中访问进行验证</p>
 <p>{{ url_for('auth.confirm', token=token, _external=True) }}</p>
 <p>长颈瓶团队</p>

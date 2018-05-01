@@ -14,7 +14,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
 
-    SECRET_KEY = os.environ.get('SECRET_KEY')
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string 123'
 
     # 每次请求结束后将会自动提交数据库中的变动
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
