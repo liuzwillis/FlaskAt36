@@ -7,6 +7,7 @@
 # @Software: PyCharm
 
 from datetime import datetime
+import hashlib
 
 from flask import current_app
 
@@ -92,6 +93,8 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
 
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+
     # 用户资料
     name = db.Column(db.String(64))
     location = db.Column(db.String(64))
@@ -99,7 +102,7 @@ class User(UserMixin, db.Model):
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
 
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    avatar_hash = db.Column(db.String(32))
 
     # 继承一下父类的init
     def __init__(self, **kwargs):
@@ -110,6 +113,9 @@ class User(UserMixin, db.Model):
                 self.role = Role.query.filter_by(role_name='Administrator').first()
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
+        # 初始化gravatar_hash
+        if self.email is not None and self.avatar_hash is None:
+            self.gravatar_hash()
 
     @property
     def password(self):
@@ -194,6 +200,18 @@ class User(UserMixin, db.Model):
     def ping(self):
         self.last_seen = datetime.utcnow()
         db.session.add(self)
+
+    def gravatar_hash(self):
+        # 刷新self.avatar_hash 并返回md5hash
+        md5hash = hashlib.md5(self.email.lower().encode('utf-8')).hexdigest()
+        self.avatar_hash = md5hash
+        return md5hash
+
+    def gravatar(self, size=100, default='identicon', rating='g'):
+        url = 'https://secure.gravatar.com/avatar'
+        md5hash = self.avatar_hash or self.gravatar_hash()
+        return '{url}/{md5hash}?s={size}&d={default}&r={rating}'.\
+            format(url=url, md5hash=md5hash, size=size, default=default, rating=rating)
 
     def __repr__(self):
         return '<User %r>' % self.username

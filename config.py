@@ -27,12 +27,12 @@ class Config:
     MAIL_USE_TLS = True
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    FLASKY_MAIL_SUBJECT_PREFIX = '[Flasky]'
-    # 发件人的格式，可以写成tuple，flask_mail会识别
-    FLASKY_MAIL_SENDER = ('Flasky Admin', os.environ.get('MAIL_USERNAME'))
-    FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
-    
+
     WEB_NAME = '长颈瓶'
+    FLASKY_MAIL_SUBJECT_PREFIX = '[{}]'.format(WEB_NAME)
+    # 发件人的格式，可以写成tuple，flask_mail会识别
+    FLASKY_MAIL_SENDER = ('{}管理员'.format(WEB_NAME), os.environ.get('MAIL_USERNAME'))
+    FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
 
     @staticmethod
     def init_app(app):
