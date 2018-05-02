@@ -6,6 +6,8 @@
 # @File    : views.py
 # @Software: PyCharm
 
+from operator import or_
+
 from flask import render_template, redirect, url_for, request, flash
 
 from flask_login import login_user, login_required, logout_user, current_user
@@ -43,7 +45,9 @@ def login():
         return redirect(url_for('main.index'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+        username_email = form.username_email.data
+        user = User.query.filter(or_(User.username == username_email,
+                                     User.email == username_email)).first()
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
             return redirect(request.args.get('next') or url_for('main.index'))

@@ -10,7 +10,7 @@ import os
 
 from app import create_app
 from app import db
-from app.models import User, Role
+from app.models import User, Role, Post
 
 from flask_script import Manager, Shell, Server
 from flask_migrate import Migrate, MigrateCommand
@@ -25,7 +25,7 @@ migrate = Migrate(app, db)
 # Server用于指定server的host等参数 python flasky.py runserver
 # Shell 用于自动导入特定的对象 python flasky.py shell
 def make_shell_context():
-    return dict(app=app, db=db, User=User, Role=Role)
+    return dict(app=app, db=db, User=User, Role=Role, Post=Post)
 manager.add_command('shell', Shell(make_context=make_shell_context))
 manager.add_command('runserver', Server(host='0.0.0.0', port=5000))
 manager.add_command('db', MigrateCommand)

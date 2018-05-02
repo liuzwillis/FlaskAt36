@@ -6,6 +6,8 @@
 # @File    : forms.py
 # @Software: PyCharm
 
+import re
+
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, StringField, PasswordField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
@@ -15,7 +17,13 @@ from ..models import User
 
 
 class LoginForm(FlaskForm):
-    email = StringField('邮箱：', validators=[DataRequired(), Length(1, 64), Email()])
+    # 用户名/邮箱登录
+    # 用户名/邮箱的正则，前部分是username，后面是邮箱，忽略大小写
+    username_email = StringField('用户名/邮箱：',
+                                 validators=[DataRequired(),
+                                             Length(1, 64),
+                                             Regexp(r'(^[A-Za-z][A-Za-z0-9_]*$)|(^.+@([^.@][^@]+)$)',
+                                                    0, '请输入正确的用户名/邮箱')])
     password = PasswordField('密码：', validators=[DataRequired(), Length(1, 64)])
     remember_me = BooleanField('记住我')
     submit = SubmitField('登录')

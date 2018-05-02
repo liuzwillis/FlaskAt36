@@ -36,7 +36,7 @@ div.post-thumbnail {
 }
 div.post-content {
     margin-left: 48px;
-    min-height: 48px;
+    min-height: 96px;
 }
 div.post-footer {
     text-align: right;

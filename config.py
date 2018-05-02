@@ -29,10 +29,13 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
 
     WEB_NAME = '长颈瓶'
+    POST_NAME = '帖子'
     FLASKY_MAIL_SUBJECT_PREFIX = '[{}]'.format(WEB_NAME)
     # 发件人的格式，可以写成tuple，flask_mail会识别
     FLASKY_MAIL_SENDER = ('{}管理员'.format(WEB_NAME), os.environ.get('MAIL_USERNAME'))
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
+
+    FAKER_PASSWORD = os.environ.get('FAKER_PASSWORD') or 'password'
 
     @staticmethod
     def init_app(app):

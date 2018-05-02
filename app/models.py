@@ -94,6 +94,7 @@ class User(UserMixin, db.Model):
     confirmed = db.Column(db.Boolean, default=False)
 
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    posts = db.relationship('Post', backref='author', lazy='dynamic')
 
     # 用户资料
     name = db.Column(db.String(64))
@@ -103,6 +104,9 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
 
     avatar_hash = db.Column(db.String(32))
+
+    # 虚拟用户
+    is_faker = db.Column(db.Boolean, default=False)
 
     # 继承一下父类的init
     def __init__(self, **kwargs):
@@ -127,6 +131,8 @@ class User(UserMixin, db.Model):
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    # token
 
     def generate_token(self, token_name='default', expiration=3600, **kwargs):
         # token_name 用于识别token的用途，防止串用, 自带id
@@ -232,3 +238,15 @@ login_manager.anonymous_user = AnonymousUser
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
+class Post(db.Model):
+    __tablename__ = 'posts'
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    is_faker = db.Column(db.Boolean, default=False)
+

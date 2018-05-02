@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title_sub %}用户资料{% endblock %}
+{% block title_sub %}用户资料 {{ user.username }}{% endblock %}
 
 {% block page_content %}
     <div class="page-header">
@@ -15,8 +15,8 @@
                     {% endif %}
                 </p>
             {% endif %}
-            {% if current_user.is_administrator() %}
-                <p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+            {% if user == current_user %}
+                <p>邮箱：{{ user.email }}</p>
             {% endif %}
             {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
             <p>
@@ -32,7 +32,12 @@
                     <a class="btn btn-danger" href="{{ url_for('main.edit_profile_admin',
                      user_id=user.id) }}">编辑资料 [Admin]</a>
                 {% endif %}
+                {% if current_user.is_administrator() %}
+                    <p><a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
+                {% endif %}
             </P>
         </div>
     </div>
+    <h3>{{ user.username }}的{{ config.POST_NAME }}</h3>
+    {% include '_posts.html' %}
 {% endblock %}

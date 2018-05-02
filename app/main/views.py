@@ -12,22 +12,29 @@ from flask import render_template, session, redirect,\
 from flask_login import login_required, current_user
 
 from . import main
-from .forms import EditProfileForm, EditProfileAdminForm
+from .forms import EditProfileForm, EditProfileAdminForm, PostForm
 from .. import db
-from ..models import User, Role
-from ..email import send_email
+from ..models import User, Role, Post, Permission
 from ..decorators import admin_required
 
 
-@main.route('/')
+@main.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
+    form = PostForm()
+    if current_user.can(Permission.WRITE) and form.validate_on_submit():
+        post = Post(body=form.body.data, author=current_user._get_current_object())
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('main.index'))
+    posts = Post.query.order_by(Post.timestamp.desc()).all()
+    return render_template('index.html', form=form, posts=posts)
 
 
 @main.route('/user/<username>')
 def user(username):
-    user = User.query.filter_by(username=username).first_or_404()
-    return render_template('user.html', user=user)
+    user_ = User.query.filter_by(username=username).first_or_404()
+    posts = user_.posts.order_by(Post.timestamp.desc()).all()
+    return render_template('user.html', user=user_, posts=posts)
 
 
 @main.route('/edit-profile', methods=['GET', 'POST'])
@@ -73,5 +80,4 @@ def edit_profile_admin(user_id):
     form.location.data = user.location
     form.about_me.data = user.about_me
     return render_template('edit_profile.html', form=form, user=user)
-
 

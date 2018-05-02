@@ -58,3 +58,9 @@ class EditProfileAdminForm(FlaskForm):
         admin = Role.query.filter_by(role_name='Administrator').first()
         if field.data == admin.id and self.email.data != current_app.config['FLASKY_ADMIN']:
             raise ValidationError('管理员权限只能授予特定的用户')
+
+
+class PostForm(FlaskForm):
+    body = TextAreaField('输入内容', validators=[DataRequired()])
+    submit = SubmitField('提交')
+
