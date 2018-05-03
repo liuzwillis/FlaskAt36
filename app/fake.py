@@ -6,7 +6,8 @@
 # @File    : fake.py
 # @Software: PyCharm
 
-from random import randint
+import random
+
 from faker import Faker
 
 from flask import current_app
@@ -40,9 +41,10 @@ def users(count=100):
 
 def posts(count=100):
     fake = Faker(locale='zh-cn')
-    user_count = User.query.count()
+    # 只为虚拟用户添加虚拟post
+    fake_users = User.query.filter_by(is_faker=True).all()
     for i in range(count):
-        u = User.query.offset(randint(0, user_count-1)).first()
+        u = random.choice(fake_users)
         p = Post(body=fake.text(),
                  timestamp=fake.past_date(),
                  author=u,
@@ -50,3 +52,13 @@ def posts(count=100):
         db.session.add(p)
     db.session.commit()
 
+
+def delete_users():
+    db.session.query(User).filter(User.is_faker == True).delete()
+    db.session.commit()
+
+
+def delete_posts():
+    db.session.query(Post).filter(Post.is_faker == True).delete()
+    # db.session.query(Post).filter(Post.author.in_(User.query.filter_by(is_faker=True))).delete()
+    db.session.commit()

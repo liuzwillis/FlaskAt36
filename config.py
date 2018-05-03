@@ -30,11 +30,14 @@ class Config:
 
     WEB_NAME = '长颈瓶'
     POST_NAME = '帖子'
+    POSTS_PER_PAGE = 20
+
     FLASKY_MAIL_SUBJECT_PREFIX = '[{}]'.format(WEB_NAME)
     # 发件人的格式，可以写成tuple，flask_mail会识别
     FLASKY_MAIL_SENDER = ('{}管理员'.format(WEB_NAME), os.environ.get('MAIL_USERNAME'))
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
 
+    # 虚拟用户的密码
     FAKER_PASSWORD = os.environ.get('FAKER_PASSWORD') or 'password'
 
     @staticmethod

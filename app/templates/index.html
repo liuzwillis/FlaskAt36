@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
 
 {% block title_sub %}首页{% endblock %}
 
@@ -20,5 +21,15 @@
     </div>
 
     {% include '_posts.html' %}
+    {% if pagination %}
+    <div class="pagination">
+        {{ macros.pagination_widget2(pagination, 'main.index') }}
+    </div>
+    {% endif %}
 
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ pagedown.include_pagedown() }}
 {% endblock %}

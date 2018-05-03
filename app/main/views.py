@@ -26,15 +26,21 @@ def index():
         db.session.add(post)
         db.session.commit()
         return redirect(url_for('main.index'))
-    posts = Post.query.order_by(Post.timestamp.desc()).all()
-    return render_template('index.html', form=form, posts=posts)
+    page = request.args.get('page', 1, type=int)
+    pagination = Post.query.order_by(Post.timestamp.desc()).paginate(
+        page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
+    posts = pagination.items
+    return render_template('index.html', form=form, posts=posts, pagination=pagination)
 
 
 @main.route('/user/<username>')
 def user(username):
     user_ = User.query.filter_by(username=username).first_or_404()
-    posts = user_.posts.order_by(Post.timestamp.desc()).all()
-    return render_template('user.html', user=user_, posts=posts)
+    page = request.args.get('page', 1, type=int)
+    pagination = user_.posts.order_by(Post.timestamp.desc()).paginate(
+        page, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
+    posts = pagination.items
+    return render_template('user.html', user=user_, posts=posts, pagination=pagination)
 
 
 @main.route('/edit-profile', methods=['GET', 'POST'])
@@ -81,3 +87,24 @@ def edit_profile_admin(user_id):
     form.about_me.data = user.about_me
     return render_template('edit_profile.html', form=form, user=user)
 
+
+@main.route('/post/<int:post_id>')
+def post(post_id):
+    post_ = Post.query.get_or_404(post_id)
+    return render_template('post.html', posts=[post_])
+
+
+@main.route('/edit/<int:post_id>', methods=['GET', 'POST'])
+@login_required
+def edit(post_id):
+    post_ = Post.query.get_or_404(post_id)
+    if current_user != post_.author and not current_user.can(Permission.ADMIN):
+        abort(403)
+    form = PostForm()
+    if form.validate_on_submit():
+        post_.body = form.body.data
+        db.session.add(post_)
+        flash('{}已经更新'.format(current_app.config['POST_NAME']))
+        return redirect(url_for('main.post', post_id=post_.id))
+    form.body.data = post_.body
+    return render_template('edit_post.html', form=form)

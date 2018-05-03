@@ -1,0 +1,70 @@
+{% macro pagination_widget(pagination, endpoint, fragment='') %}
+<ul class="pagination">
+    <li {% if not pagination.has_prev %}class="disabled"{% endif %}>
+        <a href="{% if pagination.has_prev %}{{ url_for(endpoint, page=pagination.prev_num, **kwargs) }}{{ fragment }}{% else %}#{% endif %}">
+            &laquo;
+        </a>
+    </li>
+    {% for p in pagination.iter_pages() %}
+        {% if p %}
+            {% if p == pagination.page %}
+            <li class="active">
+                <a href="{{ url_for(endpoint, page=p, **kwargs) }}{{ fragment }}">{{ p }}</a>
+            </li>
+            {% else %}
+            <li>
+                <a href="{{ url_for(endpoint, page=p, **kwargs) }}{{ fragment }}">{{ p }}</a>
+            </li>
+            {% endif %}
+        {% else %}
+            <li class="disabled"><a href="#">&hellip;</a></li>
+        {% endif %}
+    {% endfor %}
+    <li {% if not pagination.has_next %}class="disabled"{% endif %}>
+        <a href="{% if pagination.has_next %}{{ url_for(endpoint, page=pagination.next_num, **kwargs) }}{{ fragment }}{% else %}#{% endif %}">
+            &raquo;
+        </a>
+    </li>
+</ul>
+{% endmacro %}
+
+{% macro pagination_widget2(pagination, endpoint) %}
+    {% if pagination.pages == 1 %}
+    {# 如果总页数只有1，不显示 #}
+    {% else %}
+    <ul class="pagination">
+        {% for p in pagination.iter_pages(left_edge=1, left_current=4, right_current=5, right_edge=1) %}
+            {% if p %}
+
+                {% if p == pagination.page %}   {#  当前页 #}
+                <li class="active">
+                    <a href="{{ url_for(endpoint, page = p, **kwargs) }}">{{ p }}</a>
+                </li>
+                {% else %}
+                {% if p == 1 %}                 {# 左边界里放：首页、上一页 #}
+                <li>
+                    <a href="{{ url_for(endpoint, page = p, **kwargs) }}">首页</a>
+                </li>
+                <li>
+                    <a href="{% if pagination.has_prev %}{{ url_for(endpoint, page=pagination.prev_num, **kwargs) }}
+                        {% else %}#{% endif %}">&lt;上一页</a>
+                </li>
+                {% else %}
+                {% if p == pagination.pages %}  {# 右边界里放：下一页和尾页 #}
+                <li>
+                    <a href="{% if pagination.has_next %}{{ url_for(endpoint, page=pagination.next_num, **kwargs) }}
+                        {% else %}#{% endif %}">下一页&gt;</a>
+                </li>
+                <li>
+                    <a href="{{ url_for(endpoint, page = p, **kwargs) }}">尾页</a>
+                </li>
+                {% else %}                      {# 中间的正常页 #}
+                <li>
+                    <a href="{{ url_for(endpoint, page = p, **kwargs) }}">{{ p }}</a>
+                </li>
+                {% endif %}{% endif %}{% endif %}
+            {% endif %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endmacro %}
