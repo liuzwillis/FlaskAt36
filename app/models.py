@@ -88,6 +88,15 @@ class Role(db.Model):
         return '<Role %r>' % self.role_name
 
 
+class Follow(db.Model):
+    __tablename__ = 'follows'
+    follower_id = db.Column(db.Integer, db.ForeignKey('users.id'),
+                            primary_key=True)
+    followed_id = db.Column(db.Integer, db.ForeignKey('users.id'),
+                            primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -97,7 +106,6 @@ class User(UserMixin, db.Model):
     confirmed = db.Column(db.Boolean, default=False)
 
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    posts = db.relationship('Post', backref='author', lazy='dynamic')
 
     # 用户资料
     name = db.Column(db.String(64))
@@ -111,6 +119,19 @@ class User(UserMixin, db.Model):
     # 虚拟用户
     is_faker = db.Column(db.Boolean, default=False)
 
+    posts = db.relationship('Post', backref='author', lazy='dynamic')
+
+    followed = db.relationship('Follow',
+                               foreign_keys=[Follow.follower_id],
+                               backref=db.backref('follower', lazy='joined'),
+                               lazy='dynamic',
+                               cascade='all, delete-orphan')
+    followers = db.relationship('Follow',
+                                foreign_keys=[Follow.followed_id],
+                                backref=db.backref('followed', lazy='joined'),
+                                lazy='dynamic',
+                                cascade='all, delete-orphan')
+
     # 继承一下父类的init
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -123,6 +144,23 @@ class User(UserMixin, db.Model):
         # 初始化gravatar_hash
         if self.email is not None and self.avatar_hash is None:
             self.gravatar_hash()
+        # 关注自己
+        self.follow(self)
+
+    # 如果库里有一些用户没有关注自己，该方法可以操作
+    @staticmethod
+    def add_self_follows():
+        for user in User.query.all():
+            if not user.is_following(user):
+                user.follow(user)
+                db.session.add(user)
+                db.session.commit()
+
+    # 返回 所有关注的post
+    @property
+    def followed_posts(self):
+        return Post.query.join(Follow, Follow.followed_id == Post.author_id)\
+            .filter(Follow.follower_id == self.id)
 
     @property
     def password(self):
@@ -210,6 +248,8 @@ class User(UserMixin, db.Model):
         self.last_seen = datetime.utcnow()
         db.session.add(self)
 
+    # gravatar头像
+
     def gravatar_hash(self):
         # 刷新self.avatar_hash 并返回md5hash
         md5hash = hashlib.md5(self.email.lower().encode('utf-8')).hexdigest()
@@ -221,6 +261,28 @@ class User(UserMixin, db.Model):
         md5hash = self.avatar_hash or self.gravatar_hash()
         return '{url}/{md5hash}?s={size}&d={default}&r={rating}'.\
             format(url=url, md5hash=md5hash, size=size, default=default, rating=rating)
+
+    # 关注
+
+    def follow(self, user):
+        if not self.is_following(user):
+            f = Follow(follower=self, followed=user)
+            db.session.add(f)
+
+    def unfollow(self, user):
+        f = self.followed.filter_by(followed_id=user.id).first()
+        if f:
+            db.session.delete(f)
+
+    def is_following(self, user):
+        if user.id is None:
+            return False
+        return self.followed.filter_by(followed_id=user.id).first() is not None
+
+    def is_followed_by(self, user):
+        if user.id is None:
+            return False
+        return self.followers.filter_by(follower_id=user.id).first() is not None
 
     def __repr__(self):
         return '<User %r>' % self.username

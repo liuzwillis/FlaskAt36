@@ -31,6 +31,7 @@ class Config:
     WEB_NAME = '长颈瓶'
     POST_NAME = '帖子'
     POSTS_PER_PAGE = 20
+    FOLLOW_PER_PAGE = 20
 
     FLASKY_MAIL_SUBJECT_PREFIX = '[{}]'.format(WEB_NAME)
     # 发件人的格式，可以写成tuple，flask_mail会识别
