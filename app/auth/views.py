@@ -45,9 +45,9 @@ def login():
         return redirect(url_for('main.index'))
     form = LoginForm()
     if form.validate_on_submit():
-        username_email = form.username_email.data
-        user = User.query.filter(or_(User.username == username_email,
-                                     User.email == username_email)).first()
+        username_or_email = form.username_or_email.data
+        user = User.query.filter(or_(User.username == username_or_email,
+                                     User.email == username_or_email)).first()
         if user is not None and user.verify_password(form.password.data):
             login_user(user, form.remember_me.data)
             return redirect(request.args.get('next') or url_for('main.index'))

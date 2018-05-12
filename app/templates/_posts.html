@@ -35,6 +35,11 @@
                     <a href="{{ url_for('main.post', post_id=post.id) }}">
                         <span class="label label-default">链接</span>
                     </a>
+                    <a href="{{ url_for('main.post', post_id=post.id) }}#comments">
+                        <span class="label label-primary">
+                            {{ post.comments.count() }} 评论
+                        </span>
+                    </a>
                 </div>
             </div>
         </li>

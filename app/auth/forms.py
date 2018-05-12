@@ -19,11 +19,11 @@ from ..models import User
 class LoginForm(FlaskForm):
     # 用户名/邮箱登录
     # 用户名/邮箱的正则，前部分是username，后面是邮箱，忽略大小写
-    username_email = StringField('用户名/邮箱：',
-                                 validators=[DataRequired(),
-                                             Length(1, 64),
-                                             Regexp(r'(^[A-Za-z][A-Za-z0-9_]*$)|(^.+@([^.@][^@]+)$)',
-                                                    0, '请输入正确的用户名/邮箱')])
+    username_or_email = StringField('用户名/邮箱：',
+                                    validators=[DataRequired(),
+                                                Length(1, 64),
+                                                Regexp(r'(^[A-Za-z][A-Za-z0-9_]*$)|(^.+@([^.@][^@]+)$)',
+                                                       0, '请输入正确的用户名/邮箱')])
     password = PasswordField('密码：', validators=[DataRequired(), Length(1, 64)])
     remember_me = BooleanField('记住我')
     submit = SubmitField('登录')
