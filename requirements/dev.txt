@@ -1,2 +1,2 @@
 -r common.txt
-faker==0.7.18
+Faker==0.8.13
