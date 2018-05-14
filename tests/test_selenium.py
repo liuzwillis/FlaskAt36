@@ -31,7 +31,8 @@ class SeleniumTestCase(unittest.TestCase):
                                                firefox_options=options)
             else:
                 cls.client = webdriver.Firefox(firefox_options=options)
-        except:
+        except Exception as e:
+            print(e)
             pass
 
         # 如果无法启动浏览器，跳过这些测试

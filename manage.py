@@ -17,12 +17,11 @@ if os.environ.get('FLASK_COVERAGE'):
 import sys
 import click
 
-from app import create_app
-from app import db
+from app import create_app, db
 from app.models import User, Role, Post, Follow, Permission, Comment
 
 from flask_script import Manager, Shell, Server
-from flask_migrate import Migrate, MigrateCommand
+from flask_migrate import Migrate, MigrateCommand, upgrade
 
 
 app = create_app(os.environ.get('FLASK_CONFIG') or 'default')
@@ -30,9 +29,9 @@ manager = Manager(app)
 migrate = Migrate(app, db)
 
 
-# 添加命令行命令参数
-# Server用于指定server的host等参数 python flasky.py runserver
-# Shell 用于自动导入特定的对象 python flasky.py shell
+# Shell中添加参数
+# 现在的flask其实不在需要manager,自带run（runserver） db shell,目前暂时保留一下
+# flask run
 @app.shell_context_processor
 def make_shell_context():
     return dict(app=app, db=db, User=User, Role=Role,
@@ -47,6 +46,7 @@ manager.add_command('db', MigrateCommand)
               help='Run tests under code coverage.')
 def test(coverage):
     """运行测试"""
+    # flask test --coverage
     if coverage and not os.environ.get('FLASK_COVERAGE'):
         import subprocess
         os.environ['FLASK_COVERAGE'] = '1'
@@ -65,6 +65,35 @@ def test(coverage):
         COV.html_report(directory=covdir)
         print('HTML version: file://%s/index.html' % covdir)
         COV.erase()
+
+
+@app.cli.command()
+@click.option('--length', default=25,
+              help='Number of functions to include in the profiler report.')
+@click.option('--profile-dir', default=None,
+              help='Directory where profiler data files are saved.')
+def profile(length, profile_dir):
+    """性能测试：Start the application under the code profiler."""
+    # flask profile -- --
+    from werkzeug.contrib.profiler import ProfilerMiddleware
+    app.wsgi_app = ProfilerMiddleware(app.wsgi_app,
+                                      restrictions=[length],
+                                      profile_dir=profile_dir)
+    app.run(debug=False)
+
+
+@app.cli.command()
+def deploy():
+    """部署"""
+
+    # 把数据库迁移到最新修订版本
+    upgrade()
+
+    # 用户角色
+    Role.update_roles()
+
+    # 所有用户都关注自己
+    User.add_self_follows()
 
 if __name__ == '__main__':
     manager.run()
