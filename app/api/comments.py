@@ -45,7 +45,7 @@ def get_post_comments(id):
     post = Post.query.get_or_404(id)
     page = request.args.get('page', 1, type=int)
     pagination = post.comments.order_by(Comment.timestamp.asc()).paginate(
-        page, per_page=current_app.config['FLASKY_COMMENTS_PER_PAGE'],
+        page, per_page=current_app.config['COMMENTS_PER_PAGE'],
         error_out=False)
     comments = pagination.items
     prev = None

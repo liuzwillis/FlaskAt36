@@ -48,3 +48,6 @@ venv_Flask3_win10
 
 # pycharm
 .idea
+
+# log
+*.log
