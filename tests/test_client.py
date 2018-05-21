@@ -43,22 +43,21 @@ class FlaskClientTestCase(unittest.TestCase):
 
         # 使用新用户登录
         response = self.client.post('/auth/login', data={
-            'username_or_email': 'john@example.com',
+            'username_or_email': 'john',
             'password': 'cat'
         }, follow_redirects=True)
         self.assertEqual(response.status_code, 200)
         text = response.data.decode()
         # print(text)
-        self.assertTrue(re.search('您好,\s+john!', text))
-        self.assertTrue(
-            '您的邮箱还没有确认' in text)
+        self.assertTrue(re.search('您好,\s+john', text))
+        self.assertTrue('您的邮箱还没有确认' in text)
 
         # send a confirmation token
+        # 模拟发送token ，通过token链接验证
         user = User.query.filter_by(email='john@example.com').first()
         token = user.generate_token(token_name='confirm')
         response = self.client.get('/auth/confirm/{}'.format(token),
                                    follow_redirects=True)
-        user.confirm(token)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(
             '邮箱验证成功' in response.data.decode())

@@ -152,7 +152,7 @@
 <p id="t17" class="stm run hide_run">    <span class="key">return</span> <span class="nam">jsonify</span><span class="op">(</span><span class="nam">user</span><span class="op">.</span><span class="nam">to_json</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t18" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t19" class="pln"><span class="strut">&nbsp;</span></p>
-<p id="t20" class="stm run hide_run"><span class="op">@</span><span class="nam">api</span><span class="op">.</span><span class="nam">route</span><span class="op">(</span><span class="str">'/users/&lt;int:id>/posts/'</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t20" class="stm run hide_run"><span class="op">@</span><span class="nam">api</span><span class="op">.</span><span class="nam">route</span><span class="op">(</span><span class="str">'/users/&lt;int:id>/posts'</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t21" class="pln"><span class="key">def</span> <span class="nam">get_user_posts</span><span class="op">(</span><span class="nam">id</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t22" class="stm run hide_run">    <span class="nam">user</span> <span class="op">=</span> <span class="nam">User</span><span class="op">.</span><span class="nam">query</span><span class="op">.</span><span class="nam">get_or_404</span><span class="op">(</span><span class="nam">id</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t23" class="stm run hide_run">    <span class="nam">page</span> <span class="op">=</span> <span class="nam">request</span><span class="op">.</span><span class="nam">args</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">'page'</span><span class="op">,</span> <span class="num">1</span><span class="op">,</span> <span class="nam">type</span><span class="op">=</span><span class="nam">int</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
@@ -174,7 +174,7 @@
 <p id="t39" class="pln">    <span class="op">}</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t40" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t41" class="pln"><span class="strut">&nbsp;</span></p>
-<p id="t42" class="stm run hide_run"><span class="op">@</span><span class="nam">api</span><span class="op">.</span><span class="nam">route</span><span class="op">(</span><span class="str">'/users/&lt;int:id>/timeline/'</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t42" class="stm run hide_run"><span class="op">@</span><span class="nam">api</span><span class="op">.</span><span class="nam">route</span><span class="op">(</span><span class="str">'/users/&lt;int:id>/timeline'</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t43" class="pln"><span class="key">def</span> <span class="nam">get_user_followed_posts</span><span class="op">(</span><span class="nam">id</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t44" class="stm run hide_run">    <span class="nam">user</span> <span class="op">=</span> <span class="nam">User</span><span class="op">.</span><span class="nam">query</span><span class="op">.</span><span class="nam">get_or_404</span><span class="op">(</span><span class="nam">id</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t45" class="stm run hide_run">    <span class="nam">page</span> <span class="op">=</span> <span class="nam">request</span><span class="op">.</span><span class="nam">args</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">'page'</span><span class="op">,</span> <span class="num">1</span><span class="op">,</span> <span class="nam">type</span><span class="op">=</span><span class="nam">int</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
@@ -204,7 +204,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v4.5.1</a>,
-            created at 2018-05-14 09:24
+            created at 2018-05-15 22:14
         </p>
     </div>
 </div>

@@ -14,7 +14,7 @@ from .decorators import permission_required
 from .errors import forbidden
 
 
-@api.route('/posts/')
+@api.route('/posts')
 def get_posts():
     page = request.args.get('page', 1, type=int)
     pagination = Post.query.paginate(
@@ -41,7 +41,7 @@ def get_post(id):
     return jsonify(post.to_json())
 
 
-@api.route('/posts/', methods=['POST'])
+@api.route('/posts', methods=['POST'])
 @permission_required(Permission.WRITE)
 def new_post():
     post = Post.from_json(request.json)

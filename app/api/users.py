@@ -17,7 +17,7 @@ def get_user(id):
     return jsonify(user.to_json())
 
 
-@api.route('/users/<int:id>/posts/')
+@api.route('/users/<int:id>/posts')
 def get_user_posts(id):
     user = User.query.get_or_404(id)
     page = request.args.get('page', 1, type=int)
@@ -39,7 +39,7 @@ def get_user_posts(id):
     })
 
 
-@api.route('/users/<int:id>/timeline/')
+@api.route('/users/<int:id>/timeline')
 def get_user_followed_posts(id):
     user = User.query.get_or_404(id)
     page = request.args.get('page', 1, type=int)

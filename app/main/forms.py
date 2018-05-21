@@ -19,9 +19,14 @@ from ..models import Role, User
 
 
 class EditProfileForm(FlaskForm):
-    name = StringField('姓名：', validators=[Length(0, 64)])
-    location = StringField('地址：', validators=[Length(0, 64)])
-    about_me = TextAreaField('介绍：')
+    name = StringField('姓名',
+                       render_kw={"placeholder": "姓名"},
+                       validators=[Length(0, 64)])
+    location = StringField('地址',
+                           render_kw={"placeholder": "地址"},
+                           validators=[Length(0, 64)])
+    about_me = TextAreaField('关于我',
+                             render_kw={"placeholder": "关于我"},)
     submit = SubmitField('提交')
 
 
@@ -64,10 +69,10 @@ class EditProfileAdminForm(FlaskForm):
 
 class PostForm(FlaskForm):
     body = PageDownField('输入内容：', validators=[DataRequired()])
-    submit = SubmitField('提交')
+    submit = SubmitField('发布')
 
 
 class CommentForm(FlaskForm):
     body = StringField('评论', validators=[DataRequired()])
-    submit = SubmitField('提交')
+    submit = SubmitField('发布')
 

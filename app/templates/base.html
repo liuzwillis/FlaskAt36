@@ -10,11 +10,12 @@
 {#    shortcut 为 浏览器标签左边的小图标 #}
 <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">   {# css样式文件 #}
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 {% endblock %}
 
 {# 导航条 #}
 {% block navbar %}
-<div class="navbar navbar-inverse" role="navigation">
+<div class="navbar navbar-default navbar-static-top" role="navigation">
     <div class="container">
         {# 导航头 #}
         <div class="navbar-header">

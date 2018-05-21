@@ -153,7 +153,7 @@
 <p id="t14" class="stm run hide_run"><span class="key">from</span> <span class="op">.</span><span class="nam">errors</span> <span class="key">import</span> <span class="nam">forbidden</span><span class="strut">&nbsp;</span></p>
 <p id="t15" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t16" class="pln"><span class="strut">&nbsp;</span></p>
-<p id="t17" class="stm run hide_run"><span class="op">@</span><span class="nam">api</span><span class="op">.</span><span class="nam">route</span><span class="op">(</span><span class="str">'/posts/'</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t17" class="stm run hide_run"><span class="op">@</span><span class="nam">api</span><span class="op">.</span><span class="nam">route</span><span class="op">(</span><span class="str">'/posts'</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t18" class="pln"><span class="key">def</span> <span class="nam">get_posts</span><span class="op">(</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t19" class="stm run hide_run">    <span class="nam">page</span> <span class="op">=</span> <span class="nam">request</span><span class="op">.</span><span class="nam">args</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">'page'</span><span class="op">,</span> <span class="num">1</span><span class="op">,</span> <span class="nam">type</span><span class="op">=</span><span class="nam">int</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t20" class="stm run hide_run">    <span class="nam">pagination</span> <span class="op">=</span> <span class="nam">Post</span><span class="op">.</span><span class="nam">query</span><span class="op">.</span><span class="nam">paginate</span><span class="op">(</span><span class="strut">&nbsp;</span></p>
@@ -180,7 +180,7 @@
 <p id="t41" class="stm run hide_run">    <span class="key">return</span> <span class="nam">jsonify</span><span class="op">(</span><span class="nam">post</span><span class="op">.</span><span class="nam">to_json</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t42" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t43" class="pln"><span class="strut">&nbsp;</span></p>
-<p id="t44" class="stm run hide_run"><span class="op">@</span><span class="nam">api</span><span class="op">.</span><span class="nam">route</span><span class="op">(</span><span class="str">'/posts/'</span><span class="op">,</span> <span class="nam">methods</span><span class="op">=</span><span class="op">[</span><span class="str">'POST'</span><span class="op">]</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t44" class="stm run hide_run"><span class="op">@</span><span class="nam">api</span><span class="op">.</span><span class="nam">route</span><span class="op">(</span><span class="str">'/posts'</span><span class="op">,</span> <span class="nam">methods</span><span class="op">=</span><span class="op">[</span><span class="str">'POST'</span><span class="op">]</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t45" class="stm run hide_run"><span class="op">@</span><span class="nam">permission_required</span><span class="op">(</span><span class="nam">Permission</span><span class="op">.</span><span class="nam">WRITE</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t46" class="pln"><span class="key">def</span> <span class="nam">new_post</span><span class="op">(</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t47" class="stm run hide_run">    <span class="nam">post</span> <span class="op">=</span> <span class="nam">Post</span><span class="op">.</span><span class="nam">from_json</span><span class="op">(</span><span class="nam">request</span><span class="op">.</span><span class="nam">json</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
@@ -212,7 +212,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v4.5.1</a>,
-            created at 2018-05-14 09:24
+            created at 2018-05-15 22:14
         </p>
     </div>
 </div>

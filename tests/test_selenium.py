@@ -20,7 +20,7 @@ class SeleniumTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        # 开启 浏览器 无头模式 关闭显卡加速
+        # 开启 火狐浏览器 无界面模式 关闭显卡加速
         options = webdriver.FirefoxOptions()
         options.add_argument('--headless')
         options.add_argument('--disable-gpu')
@@ -97,7 +97,7 @@ class SeleniumTestCase(unittest.TestCase):
         self.client.find_element_by_link_text('登录').click()
         self.assertIn('<h1>登录</h1>', self.client.page_source)
 
-        # 登录
+        # 用email登录
         self.client.find_element_by_name('username_or_email'). \
             send_keys('john@example.com')
         self.client.find_element_by_name('password').send_keys('cat')
@@ -108,11 +108,29 @@ class SeleniumTestCase(unittest.TestCase):
         # 进入用户资料页面出现错误，没有找到指定的连接，所以进行一些其他测试，试图找到原因所在
         # 错误原因找到，个人资料选项在下拉菜单中，需要先点击才能找到
         self.client.find_element_by_link_text('john').click()
+        # 退出
+        self.client.find_element_by_link_text('退出').click()
 
-        # 进入用户资料页面
-
-        self.client.find_element_by_link_text('个人资料').click()
-        self.assertIn('<h1>john</h1>', self.client.page_source)
+        # # 重新以username登录
+        # self.client.find_element_by_link_text('登录').click()
+        # self.client.find_element_by_name('username_or_email').send_keys('john')
+        # self.client.find_element_by_name('password').send_keys('cat')
+        # self.client.find_element_by_name('submit').click()
+        # self.assertTrue(re.search('你好\s+john', self.client.page_source))
+        #
+        # # 进入用户资料页面
+        # self.client.find_element_by_link_text('john').click()
+        # self.client.find_element_by_link_text('个人资料').click()
+        # self.assertIn('<h1>john</h1>', self.client.page_source)
+        # # 编辑资料
+        # self.client.find_element_by_link_text('编辑资料').click()
+        # self.client.find_element_by_name('name').send_keys('约翰')
+        # self.client.find_element_by_name('location').send_keys('美国')
+        # self.client.find_element_by_name('about_me').send_keys('简简单单简简单单')
+        # self.client.find_element_by_name('submit').click()
+        # self.assertTrue('约翰' in self.client.page_source)
+        # self.assertTrue('美国' in self.client.page_source)
+        # self.assertTrue('简简单单简简单单' in self.client.page_source)
 
 
 if __name__ == '__main__':

@@ -29,6 +29,17 @@ def forbidden(message):
     return response
 
 
+# def method_not_allowed(message):
+#     response = jsonify({'error': 'method_not_allowed', 'message': message})
+#     response.status_code = 405
+#     return response
+
+
 @api.errorhandler(ValidationError)
 def validation_error(e):
     return bad_request(e.args[0])
+
+
+# @api.errorhandler(405)
+# def method_error(e):
+#     return method_not_allowed(e.args[0])

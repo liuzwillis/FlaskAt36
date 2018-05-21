@@ -6,7 +6,7 @@
 
 {% block page_content %}
 
-    <div class="page-header">
+    <div class="page-header  col-md-10 col-xs-10">
         你好
         {% if current_user.is_authenticated %}
             {{ current_user.username }}
@@ -14,12 +14,12 @@
             陌生人,人生若只如初见
         {% endif %}
     </div>
-    <div>
+    <div class="col-md-10 col-xs-10 ">
         {% if current_user.can(Permission.WRITE) %}
             {{ wtf.quick_form(form) }}
         {% endif %}
     </div>
-    <div class="post-tabs">
+    <div class="post-tabs col-md-10 col-xs-10">
         <ul class="nav nav-tabs">
             <li{% if not show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_all') }}">所有的</a></li>
             {% if current_user.is_authenticated %}
@@ -30,7 +30,7 @@
     </div>
 
     {% if pagination %}
-    <div class="pagination">
+    <div class="pagination col-md-10 col-xs-10">
         {{ macros.pagination_widget2(pagination, 'main.index') }}
     </div>
     {% endif %}

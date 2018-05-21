@@ -50,7 +50,7 @@ def before_request():
         return forbidden('Unconfirmed account')
 
 
-@api.route('/tokens/', methods=['POST'])
+@api.route('/tokens')
 def get_token():
     if g.current_user.is_anonymous or g.token_used:
         return unauthorized('Invalid credentials')

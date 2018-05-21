@@ -13,7 +13,7 @@ from . import api
 from .decorators import permission_required
 
 
-@api.route('/comments/')
+@api.route('/comments')
 def get_comments():
     page = request.args.get('page', 1, type=int)
     pagination = Comment.query.order_by(Comment.timestamp.desc()).paginate(
@@ -40,7 +40,7 @@ def get_comment(id):
     return jsonify(comment.to_json())
 
 
-@api.route('/posts/<int:id>/comments/')
+@api.route('/posts/<int:id>/comments')
 def get_post_comments(id):
     post = Post.query.get_or_404(id)
     page = request.args.get('page', 1, type=int)
@@ -62,7 +62,7 @@ def get_post_comments(id):
     })
 
 
-@api.route('/posts/<int:id>/comments/', methods=['POST'])
+@api.route('/posts/<int:id>/comments', methods=['POST'])
 @permission_required(Permission.COMMENT)
 def new_post_comment(id):
     post = Post.query.get_or_404(id)
