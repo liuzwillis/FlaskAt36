@@ -90,14 +90,14 @@ class SeleniumTestCase(unittest.TestCase):
     def test_admin_home_page(self):
         # 进入首页
         self.client.get('http://localhost:5000/')
-        self.assertTrue(re.search('你好\s+陌生人',
+        self.assertTrue(re.search('你好陌生人',
                                   self.client.page_source))
 
         # 进入登录页面
         self.client.find_element_by_link_text('登录').click()
-        self.assertIn('<h1>登录</h1>', self.client.page_source)
+        self.assertIn('<h3>登录</h3>', self.client.page_source)
 
-        # 用email登录
+        # 用email or username登录
         self.client.find_element_by_name('username_or_email'). \
             send_keys('john@example.com')
         self.client.find_element_by_name('password').send_keys('cat')
@@ -111,26 +111,30 @@ class SeleniumTestCase(unittest.TestCase):
         # 退出
         self.client.find_element_by_link_text('退出').click()
 
-        # # 重新以username登录
-        # self.client.find_element_by_link_text('登录').click()
-        # self.client.find_element_by_name('username_or_email').send_keys('john')
-        # self.client.find_element_by_name('password').send_keys('cat')
-        # self.client.find_element_by_name('submit').click()
-        # self.assertTrue(re.search('你好\s+john', self.client.page_source))
-        #
-        # # 进入用户资料页面
-        # self.client.find_element_by_link_text('john').click()
-        # self.client.find_element_by_link_text('个人资料').click()
-        # self.assertIn('<h1>john</h1>', self.client.page_source)
-        # # 编辑资料
-        # self.client.find_element_by_link_text('编辑资料').click()
-        # self.client.find_element_by_name('name').send_keys('约翰')
-        # self.client.find_element_by_name('location').send_keys('美国')
-        # self.client.find_element_by_name('about_me').send_keys('简简单单简简单单')
-        # self.client.find_element_by_name('submit').click()
-        # self.assertTrue('约翰' in self.client.page_source)
-        # self.assertTrue('美国' in self.client.page_source)
-        # self.assertTrue('简简单单简简单单' in self.client.page_source)
+        # 重新以username登录
+        self.client.find_element_by_link_text('登录').click()
+        self.client.find_element_by_name('username_or_email').send_keys('john')
+        self.client.find_element_by_name('password').send_keys('cat')
+        self.client.find_element_by_name('submit').click()
+        self.assertTrue(re.search('你好\s+john', self.client.page_source))
+
+        # 进入用户资料页面
+        self.client.find_element_by_link_text('john').click()
+        self.client.find_element_by_link_text('个人资料').click()
+        self.assertIn('<h1>john</h1>', self.client.page_source)
+        # 编辑资料
+        self.client.find_element_by_link_text('编辑资料').click()
+        self.client.find_element_by_name('name').send_keys('test·for-name')
+        self.client.find_element_by_name('location').send_keys('test·for-location')
+        self.client.find_element_by_name('about_me').send_keys('test·for-about-me')
+        self.client.find_element_by_name('submit').click()
+        self.assertTrue('test·for-name' in self.client.page_source)
+        self.assertTrue('test·for-location' in self.client.page_source)
+        self.assertTrue('test·for-about-me' in self.client.page_source)
+
+        print(self.client.page_source)
+        # self.client.find_element_by_link_text('编辑资料 [Admin]').click()
+        # self.assertTrue('')
 
 
 if __name__ == '__main__':

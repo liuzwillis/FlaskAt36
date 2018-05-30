@@ -5,19 +5,22 @@
 {% block title_sub %}{{ config.POST_NAME }}{% endblock %}
 
 {% block page_content %}
-{% include '_posts.html' %}
 
-<h4 id="comments">评论</h4>
-{% if current_user.can(Permission.COMMENT) %}
-<div class="comment-form">
-    {{ wtf.quick_form(form) }}
-</div>
-{% endif %}
-{% include '_comments.html' %}
-{% if pagination %}
-<div class="pagination">
-    {{ macros.pagination_widget2(pagination, 'main.post',
-     fragment='#comments', post_id=posts[0].id) }}
-</div>
-{% endif %}
+
+    {% include '_posts.html' %}
+
+    <h4 id="comments"></h4>
+    {% if current_user.can(Permission.COMMENT) %}
+    <div class="comment-form">
+        {{ wtf.quick_form(form) }}
+    </div>
+    {% endif %}
+    {% include '_comments.html' %}
+    {% if pagination %}
+    <div class="pagination">
+        {{ macros.pagination_widget2(pagination, 'main.post',
+         fragment='#comments', post_id=posts[0].id) }}
+    </div>
+    {% endif %}
+
 {% endblock %}

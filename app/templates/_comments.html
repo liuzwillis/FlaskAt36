@@ -1,4 +1,10 @@
 <ul class="comments">
+
+{#  添加了在评论中删除的功能   #}
+    {% if current_user.can(Permission.MODERATE) %}
+    {% set moderate = True %}
+    {% endif %}
+
     {% for comment in comments %}
     <li class="comment">
         <div class="comment-thumbnail">
@@ -16,9 +22,6 @@
                 </a>
             </div>
             <div class="comment-body">
-                {% if comment.disabled %}
-                <p><i>该评论已被管理员删除</i></p>
-                {% endif %}
                 {% if moderate or not comment.disabled %}
                     {% if comment.body_html %}
                         {{ comment.body_html | safe }}
@@ -26,16 +29,30 @@
                         {{ comment.body }}
                     {% endif %}
                 {% endif %}
-            </div>
-            {% if moderate %}
+                {% if comment.disabled %}
                 <br>
+                <span class="btn btn-default btn-xs">该条评论已被管理员隐藏</span>
+                {% endif %}
+            </div>
+            {% if current_user == comment.author or moderate %}
+                <a class="btn btn-danger btn-xs" href="{{ url_for('main.delete_comment',id=comment.id) }}">
+                    删除评论
+                    <span class="glyphicon glyphicon-trashe"></span>
+                </a>
+            {% endif %}
+
+            {% if moderate %}
                 {% if comment.disabled %}
                 <a class="btn btn-default btn-xs" href="{{ url_for('.moderate_enable', id=comment.id, page=page) }}">
-                    Enable
+                    显示
+                    <span class="glyphicon glyphicon-eye-open"></span>
+
                 </a>
                 {% else %}
                 <a class="btn btn-danger btn-xs" href="{{ url_for('.moderate_disable', id=comment.id, page=page) }}">
-                    Disable
+                    隐藏
+{#                    glyphicon glyphicon-trash#}
+                    <span class="glyphicon glyphicon-eye-close"></span>
                 </a>
                 {% endif %}
             {% endif %}

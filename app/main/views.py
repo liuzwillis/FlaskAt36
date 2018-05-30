@@ -123,6 +123,7 @@ def post(post_id):
     post_ = Post.query.get_or_404(post_id)
     form = CommentForm()
     if form.validate_on_submit():
+        print(form.body.data)
         comment = Comment(body=form.body.data, post=post_,
                           author=current_user._get_current_object())
         db.session.add(comment)
@@ -279,3 +280,27 @@ def moderate_disable(id):
     db.session.commit()
     return redirect(url_for('main.moderate',
                             page=request.args.get('page', 1, type=int)))
+
+
+# -------------
+# 以下是直接从库删除的，应该做成标记删除
+# 不允许直接删除这种事情
+# @main.route('/delete-comment/<int:id>')
+# @login_required
+# def delete_comment(id):
+#     comment = Comment.query.get_or_404(id)
+#     if current_user != comment.author and not current_user.can(Permission.MODERATE):
+#         abort(403)
+#     db.session.delete(comment)
+#     db.session.commit()
+#     flash('删除了一条评论')
+#     return redirect(url_for('main.post',
+#                             post_id=comment.post_id))
+
+
+
+
+
+
+
+

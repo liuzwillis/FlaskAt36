@@ -48,7 +48,7 @@ class RegistrationForm(FlaskForm):
     email = StringField('',
                         render_kw={"placeholder": "邮箱"},
                         validators=[DataRequired(), Length(1, 64),
-                                    Email('邮箱格式不正确')])
+                                    Email()])
     username = StringField('',
                            render_kw={"placeholder": "用户名以字母开头，可使用字母数字或下划线"},
                            validators=[DataRequired(), Length(1, 64),

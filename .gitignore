@@ -49,5 +49,9 @@ venv_Flask3_win10
 # pycharm
 .idea
 
-# 忽略log日志
+# 忽略log日志 coverage产生的tmp
 *.log
+tmp
+
+# 忽略 私用文件夹
+privates

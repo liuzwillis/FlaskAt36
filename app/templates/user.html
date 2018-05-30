@@ -21,18 +21,24 @@
                 <p>邮箱：{{ user.email }}</p>
             {% endif %}
             {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
-            <p>
-                加入时间： {{ moment(user.member_since).format('L') }}.
-                上次登录： {{ moment(user.last_seen).fromNow() }}.
-            </p>
+
             <p>
                 {% if current_user.can(Permission.FOLLOW) and user != current_user %}
                     {% if not current_user.is_following(user) %}
-                    <a href="{{ url_for('.follow', username=user.username) }}" class="btn btn-primary">关注</a>
+                    <a href="{{ url_for('.follow', username=user.username) }}" class="btn btn-info btn-sm">
+                        关注
+{#                        <i class="fa fa-heart fa-lg"></i>#}
+                        <span class="glyphicon glyphicon-heart"></span>
+                    </a>
                     {% else %}
-                    <a href="{{ url_for('.unfollow', username=user.username) }}" class="btn btn-default">取关</a>
+                    <a href="{{ url_for('.unfollow', username=user.username) }}" class="btn btn-default btn-sm">
+                        已关注
+{#                        <i class="fa fa-heart-o fa-lg"></i>#}
+{#                        <span class="glyphicon glyphicon-heart-empty"></span>#}
+                    </a>
                     {% endif %}
                 {% endif %}
+                <br>
                 <a href="{{ url_for('.followers', username=user.username) }}">粉丝: <span class="badge">
                     {% if user.followers.count() - 1 < 0 %}0{% else %}{{ user.followers.count() - 1 }}{% endif %}
                     </span>
@@ -42,8 +48,13 @@
                     </span>
                 </a>
                 {% if current_user.is_authenticated and user != current_user and user.is_following(current_user) %}
-                | <span class="label label-default">对方关注了你</span>
+                    | <span class="label label-info">对方关注了你</span>
                 {% endif %}
+            </p>
+
+            <p>
+                加入时间： {{ moment(user.member_since).format('L') }}.
+                上次登录： {{ moment(user.last_seen).fromNow() }}.
             </p>
 
             <P>

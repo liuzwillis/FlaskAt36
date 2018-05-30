@@ -22,12 +22,12 @@ from ..email import send_email
 
 @auth.before_app_request
 def before_request():
-    print('- '*40)
+    # print('- '*40)
     # print([x for x in dir(request) if x[0] != '_'])
-    print('args: ', request.args)
-    print('url: ', request.url)
-    print('headers: ', request.headers)
-    print('endpoint: ', request.endpoint)
+    # print('args: ', request.args)
+    # print('url: ', request.url)
+    # print('headers: ', request.headers)
+    # print('endpoint: ', request.endpoint)
     # print('json: {}'.format(request.accept_mimetypes.accept_json))
     if current_user.is_authenticated:
         current_user.ping()

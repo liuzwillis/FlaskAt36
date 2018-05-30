@@ -6,6 +6,8 @@
 # @File    : forms.py
 # @Software: PyCharm
 
+import re
+
 from flask import current_app
 
 from flask_wtf import FlaskForm
@@ -21,10 +23,12 @@ from ..models import Role, User
 class EditProfileForm(FlaskForm):
     name = StringField('姓名',
                        render_kw={"placeholder": "姓名"},
-                       validators=[Length(0, 64)])
+                       validators=[Length(0, 64, message='字符长度允许范围0-64'),
+                                   Regexp('^\w[\w·-]*$', 0, '仅允许数字/字母/汉字或·-，·-不允许在开头')])
     location = StringField('地址',
                            render_kw={"placeholder": "地址"},
-                           validators=[Length(0, 64)])
+                           validators=[Length(0, 64),
+                                       Regexp('^\w[\w·-]*$', 0, '仅允许数字/字母/汉字或·-，·-不允许在开头')])
     about_me = TextAreaField('关于我',
                              render_kw={"placeholder": "关于我"},)
     submit = SubmitField('提交')
